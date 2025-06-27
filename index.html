@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+   <meta charset="UTF-8" />
+   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+   <title>ProBookingQR</title>
+   <script src="https://cdn.tailwindcss.com"></script>
+   <script src="https://unpkg.com/react@17/umd/react.development.js" crossorigin></script>
+   <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script>
+   <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+</head>
+
+<body class="bg-slate-900 text-slate-300">
+   <main class="container mx-auto p-6 text-center">
+      <h1 class="text-4xl font-bold text-white mb-6">ProBookingQR</h1>
+      <button onclick="openChatbot()" class="bg-indigo-500 text-white px-6 py-3 rounded-lg">Open Chatbot</button>
+   </main>
+   <div id="chatbot-modal" class="fixed inset-0 bg-black bg-opacity-80 hidden z-50 flex items-center justify-center">
+      <div class="relative w-full max-w-md bg-white rounded-lg p-4">
+         <button onclick="closeChatbot()" class="absolute top-2 right-2 text-black">×</button>
+         <div id="chatbot-root"></div>
+      </div>
+   </div>
+   <script>
+      let ProBookingChatbot;
+
+      function openChatbot() {
+         document.getElementById('chatbot-modal').classList.remove('hidden');
+         ReactDOM.render(React.createElement(ProBookingChatbot), document.getElementById('chatbot-root'));
+      }
+
+      function closeChatbot() {
+         document.getElementById('chatbot-modal').classList.add('hidden');
+         ReactDOM.unmountComponentAtNode(document.getElementById('chatbot-root'));
+      }
+   </script>
+   <script type="text/babel">
+      const { useState } = React;
+    ProBookingChatbot = () => {
+      const [messages, setMessages] = useState(['Hi! What is your name?']);
+      return (
+        <div className="space-y-2">
+          {messages.map((msg, i) => <div key={i} className="bg-slate-200 text-black p-2 rounded">{msg}</div>)}
+          <input className="border p-2 w-full" placeholder="Type here..." />
+        </div>
+      );
+    }
+  </script>
+</body>
+
+</html>
