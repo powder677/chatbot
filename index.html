@@ -389,16 +389,26 @@
                 if (currentProgress >= 100) {
                     clearInterval(interval);
                     setTimeout(() => {
-                        const nextStep = currentStep + 1;
-                        setCurrentStep(nextStep);
-                        const nextMessage = typeof conversationSteps[nextStep].botMessage === 'function'
-                            ? conversationSteps[nextStep].botMessage(userData)
-                            : conversationSteps[nextStep].botMessage;
-                        addBotMessage(nextMessage);
+                        const nextStepIndex = currentStep + 1;
+                        if (conversationSteps[nextStepIndex]) {
+                           setCurrentStep(nextStepIndex);
+                           const nextMessage = typeof conversationSteps[nextStepIndex].botMessage === 'function'
+                              ? conversationSteps[nextStepIndex].botMessage(userData)
+                              : conversationSteps[nextStepIndex].botMessage;
+                           addBotMessage(nextMessage);
+                        }
                     }, 500);
                 }
             }, 700);
          };
+
+         // This useEffect triggers the progress bar animation when the component reaches the correct step.
+         useEffect(() => {
+            if (conversationSteps[currentStep] && conversationSteps[currentStep].id === 'building_system') {
+               handleProgress();
+            }
+         }, [currentStep]);
+
 
          const handleNext = () => {
             const step = conversationSteps[currentStep];
@@ -411,12 +421,14 @@
                setCurrentInput('');
                
                setTimeout(() => {
-                  const nextStep = currentStep + 1;
-                  setCurrentStep(nextStep);
-                  const nextMessage = typeof conversationSteps[nextStep].botMessage === 'function'
-                     ? conversationSteps[nextStep].botMessage(newData)
-                     : conversationSteps[nextStep].botMessage;
-                  addBotMessage(nextMessage);
+                  const nextStepIndex = currentStep + 1;
+                   if (conversationSteps[nextStepIndex]) {
+                     setCurrentStep(nextStepIndex);
+                     const nextMessage = typeof conversationSteps[nextStepIndex].botMessage === 'function'
+                        ? conversationSteps[nextStepIndex].botMessage(newData)
+                        : conversationSteps[nextStepIndex].botMessage;
+                     addBotMessage(nextMessage);
+                  }
                }, 500);
 
             } else if (step.inputType === 'multiselect') {
@@ -424,13 +436,11 @@
                addUserMessage(userData[step.field].join(', '));
                
                setTimeout(() => {
-                  const nextStep = currentStep + 1;
-                  setCurrentStep(nextStep);
-                  const nextMessage = conversationSteps[nextStep].botMessage;
-                  addBotMessage(nextMessage);
-
-                  if (conversationSteps[nextStep].inputType === 'progress') {
-                     handleProgress();
+                  const nextStepIndex = currentStep + 1;
+                   if (conversationSteps[nextStepIndex]) {
+                     setCurrentStep(nextStepIndex);
+                     const nextMessage = conversationSteps[nextStepIndex].botMessage;
+                     addBotMessage(nextMessage);
                   }
                }, 500);
             }
