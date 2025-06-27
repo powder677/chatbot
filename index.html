@@ -39,10 +39,27 @@
       const { useState } = React;
     ProBookingChatbot = () => {
       const [messages, setMessages] = useState(['Hi! What is your name?']);
+      const [input, setInput] = useState('');
+
+      const handleSend = () => {
+        if (!input.trim()) return;
+        setMessages(prev => [...prev, `You: ${input}`, `Nice to meet you, ${input}! What is your salon name?`]);
+        setInput('');
+      };
+
       return (
         <div className="space-y-2">
           {messages.map((msg, i) => <div key={i} className="bg-slate-200 text-black p-2 rounded">{msg}</div>)}
-          <input className="border p-2 w-full" placeholder="Type here..." />
+          <div className="flex space-x-2">
+            <input 
+              className="border p-2 flex-1 text-black" 
+              placeholder="Type here..." 
+              value={input} 
+              onChange={e => setInput(e.target.value)}
+              onKeyDown={e => e.key === 'Enter' && handleSend()}
+            />
+            <button onClick={handleSend} className="bg-indigo-500 text-white px-3 rounded">Send</button>
+          </div>
         </div>
       );
     }
